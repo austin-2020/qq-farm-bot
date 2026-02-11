@@ -185,7 +185,7 @@ QQ | 我的农场 | Lv24 125/500 | 金币:88888
 ```javascript
 const CONFIG = {
     serverUrl: 'wss://gate-obt.nqf.qq.com/prod/ws',
-    clientVersion: '1.6.0.5_20251224',
+    clientVersion: '1.6.0.11_20251224',
     platform: 'qq',              // 平台: qq 或 wx
     heartbeatInterval: 25000,    // 心跳间隔 25秒
     farmCheckInterval: 2000,     // 农场巡查间隔 2秒
