@@ -82,6 +82,24 @@ node client.js --code <code> --interval 5 --friend-interval 2
 | `--verify` | 验证 proto 定义是否正确 | — |
 | `--decode` | 进入 PB 数据解码模式 | — |
 
+### 服务器长期运行（SSH 断开不退出）
+
+服务器上无法扫码，请先在本地用 `--code` 或抓包拿到 code，再在服务器用下面任一方式后台跑。
+
+** tmux / screen（可随时 Attach 看输出）**
+
+```bash
+# tmux
+tmux new -s farm
+node client.js --code <你的code>
+# 按 Ctrl+B 再按 D 脱离，进程继续跑。重连: tmux attach -t farm
+
+# screen
+screen -S farm
+node client.js --code <你的code>
+# 按 Ctrl+A 再按 D 脱离。重连: screen -r farm
+```
+
 ### 邀请码功能（微信环境）
 
 在项目根目录创建 `share.txt` 文件，每行一个邀请链接：
@@ -155,8 +173,10 @@ node tools/calc-exp-yield.js --input tools/seed-shop-merged-export.json
 │   ├── warehouse.js       # 仓库系统: 自动出售果实
 │   ├── invite.js          # 邀请码处理: 自动申请好友
 │   ├── gameConfig.js      # 游戏配置: 等级经验表/植物数据
-│   └── decode.js          # PB 解码/验证工具模式
-├── proto/                 # Protobuf 消息定义
+│   ├── decode.js          # PB 解码/验证工具模式
+│   └── logger.js          # 日志持久化（按日期写入 logs/ 目录）
+├── logs/                   # 持久化日志目录（按日切分 farm-YYYY-MM-DD.log，已加入 .gitignore）
+├── proto/                  # Protobuf 消息定义
 │   ├── game.proto         # 网关消息定义 (gatepb)
 │   ├── userpb.proto       # 用户/登录/心跳消息
 │   ├── plantpb.proto      # 农场/土地/植物消息
@@ -232,6 +252,15 @@ const CONFIG = {
 const HELP_ONLY_WITH_EXP = true;      // 只在有经验时帮助好友（已更新可用）
 const ENABLE_PUT_BAD_THINGS = false;  // 是否启用放虫放草功能（暂不可用 必须关闭，否则有严重的话后果）
 ```
+
+### 日志持久化
+
+脚本通过 `src/utils.js` 的 `log` / `logWarn` 输出的内容会同时写入本地日志文件，便于事后排查：
+
+- **目录**：项目根目录下的 `logs/`
+- **文件名**：按日期切分，如 `farm-2026-02-14.log`
+- **内容**：与终端一致的 `[时间] [标签] 消息` 格式（农场、好友、任务、仓库、邀请、登录等）
+- 目录不存在时会自动创建；`logs/` 已加入 `.gitignore`，不会提交到仓库。
 
 ## 注意事项
 

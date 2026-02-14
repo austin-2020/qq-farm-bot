@@ -4,6 +4,7 @@
 
 const Long = require('long');
 const { RUNTIME_HINT_MASK, RUNTIME_HINT_DATA } = require('./config');
+const { appendLine: persistLog } = require('./logger');
 
 // ============ 服务器时间状态 ============
 let serverTimeMs = 0;
@@ -50,11 +51,15 @@ function toTimeSec(val) {
 
 // ============ 日志 ============
 function log(tag, msg) {
-    console.log(`[${now()}] [${tag}] ${msg}`);
+    const line = `[${now()}] [${tag}] ${msg}`;
+    console.log(line);
+    persistLog(line);
 }
 
 function logWarn(tag, msg) {
-    console.log(`[${now()}] [${tag}] ⚠ ${msg}`);
+    const line = `[${now()}] [${tag}] ⚠ ${msg}`;
+    console.log(line);
+    persistLog(line);
 }
 
 // ============ 异步工具 ============

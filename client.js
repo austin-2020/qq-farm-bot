@@ -23,6 +23,7 @@ const { processInviteCodes } = require('./src/invite');
 const { verifyMode, decodeMode } = require('./src/decode');
 const { emitRuntimeHint, sleep } = require('./src/utils');
 const { getQQFarmCodeByScan } = require('./src/qqQrLogin');
+const { close: closeLogger } = require('./src/logger');
 
 // ============ 帮助信息 ============
 function showHelp() {
@@ -174,6 +175,7 @@ async function main() {
         cleanupTaskSystem();
         stopSellLoop();
         cleanup();
+        closeLogger();
         const ws = getWs();
         if (ws) ws.close();
         process.exit(0);
